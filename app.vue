@@ -1,11 +1,41 @@
 <template>
-  <div>
+  <div class="container">
     <header>
-      <h1>URL Summarizer</h1>
-      <p>Enter a URL to get a 30-word summary powered by Claude AI</p>
+      <svg
+        class="logo"
+        width="33"
+        height="29"
+        fill="none"
+      >
+        <g
+          stroke="#000"
+          stroke-width="2"
+          opacity=".76"
+        >
+          <path
+            d="M16.5 21.863V4.435a3 3 0 0 0-4.461-2.62l-2.021 1.127A3.29 3.29 0 0 0 8.33 5.815 3.29 3.29 0 0 1 6.643 8.69l-.932.52A3.336 3.336 0 0 0 4 12.121v.528c0 .884-.478 1.698-1.25 2.128a2.437 2.437 0 0 0-1.25 2.129v3.203a6 6 0 0 0 2.856 5.11l2.927 1.8a6 6 0 0 0 6.393-.065l.073-.047a6 6 0 0 0 2.751-5.045Z"
+          />
+          <path
+            stroke-linecap="round"
+            d="m4 14.027 3.25 1.813a2.566 2.566 0 0 0 2.5 0v0a2.566 2.566 0 0 1 2.5 0l1.08.602M11.07 21.143l-.584.24a4 4 0 0 1-3.873-.46l-.506-.369M8 7.748l4.33 2.415"
+          />
+          <path
+            d="M16.5 21.863V4.435a3 3 0 0 1 4.461-2.62l2.022 1.127a3.29 3.29 0 0 1 1.687 2.873 3.29 3.29 0 0 0 1.687 2.874l.932.52A3.336 3.336 0 0 1 29 12.121v.528c0 .884.478 1.698 1.25 2.128a2.437 2.437 0 0 1 1.25 2.129v3.203a6 6 0 0 1-2.856 5.11l-2.927 1.8a6 6 0 0 1-6.393-.065l-.073-.047a6 6 0 0 1-2.751-5.045Z"
+          />
+          <path
+            stroke-linecap="round"
+            d="m29 14.027-3.25 1.813a2.566 2.566 0 0 1-2.5 0v0a2.566 2.566 0 0 0-2.5 0l-1.08.602M21.93 21.143l.584.24a4 4 0 0 0 3.873-.46l.506-.369M25 7.748l-4.33 2.415"
+          />
+        </g>
+      </svg>
+      <h1>HiveMind</h1>
+      <h2>
+        It’s like having a super-smart friend do all the reading and tell you
+        the important parts.
+      </h2>
     </header>
 
-    <section>
+    <section class="form">
       <form @submit.prevent="handleSubmit">
         <div>
           <input
@@ -16,6 +46,7 @@
             :disabled="isLoading"
           />
           <button
+            class="primary"
             type="submit"
             :disabled="isLoading || !url.trim()"
           >
@@ -23,7 +54,64 @@
               <div></div>
               Processing...
             </span>
-            <span v-else>Summarize</span>
+            <span
+              class="button-wrapper"
+              v-else
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="none"
+              >
+                <g filter="url(#a)">
+                  <path
+                    fill="#fff"
+                    d="M8.75 3v4.25H13v1.5H8.75V13h-1.5V8.75H3v-1.5h4.25V3h1.5Z"
+                  />
+                </g>
+                <defs>
+                  <filter
+                    id="a"
+                    width="14"
+                    height="14"
+                    x="1"
+                    y="2"
+                    color-interpolation-filters="sRGB"
+                    filterUnits="userSpaceOnUse"
+                  >
+                    <feFlood
+                      flood-opacity="0"
+                      result="BackgroundImageFix"
+                    />
+                    <feColorMatrix
+                      in="SourceAlpha"
+                      result="hardAlpha"
+                      values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+                    />
+                    <feOffset dy="1" />
+                    <feGaussianBlur stdDeviation="1" />
+                    <feComposite
+                      in2="hardAlpha"
+                      operator="out"
+                    />
+                    <feColorMatrix
+                      values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0"
+                    />
+                    <feBlend
+                      in2="BackgroundImageFix"
+                      result="effect1_dropShadow_27_2141"
+                    />
+                    <feBlend
+                      in="SourceGraphic"
+                      in2="effect1_dropShadow_27_2141"
+                      result="shape"
+                    />
+                  </filter>
+                </defs>
+              </svg>
+              <span>Add</span>
+            </span>
           </button>
         </div>
       </form>
@@ -34,8 +122,6 @@
     </section>
 
     <section>
-      <h2>Recent Summaries</h2>
-
       <!-- Loading state -->
       <div v-if="pending">
         <div></div>
@@ -71,7 +157,31 @@
   </div>
 </template>
 
-<style scoped></style>
+<style lang="scss" scoped>
+  @import '@/assets/style/grid.scss';
+
+  header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    margin: 7.6rem auto 3.2rem;
+    text-align: center;
+    @include breakpoint(md) {
+      max-width: 44rem;
+    }
+  }
+
+  header .logo {
+    margin: 0 auto;
+  }
+
+  .form {
+    margin: 0 auto 3.2rem;
+    @include breakpoint(md) {
+      max-width: 22rem;
+    }
+  }
+</style>
 
 <script setup>
   const url = ref('')
