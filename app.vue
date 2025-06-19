@@ -1,31 +1,26 @@
 <template>
-  <div class="container">
-    <header class="header">
+  <div>
+    <header>
       <h1>URL Summarizer</h1>
       <p>Enter a URL to get a 30-word summary powered by Claude AI</p>
     </header>
 
-    <section class="form-section">
+    <section>
       <form @submit.prevent="handleSubmit">
-        <div class="input-group">
+        <div>
           <input
             v-model="url"
             type="url"
             placeholder="https://example.com/article"
-            class="url-input"
             required
             :disabled="isLoading"
           />
           <button
             type="submit"
-            class="submit-btn"
             :disabled="isLoading || !url.trim()"
           >
-            <span
-              v-if="isLoading"
-              class="loading"
-            >
-              <div class="spinner"></div>
+            <span v-if="isLoading">
+              <div></div>
               Processing...
             </span>
             <span v-else>Summarize</span>
@@ -33,284 +28,50 @@
         </div>
       </form>
 
-      <div
-        v-if="message.text"
-        :class="['message', message.type]"
-      >
+      <div v-if="message.text">
         {{ message.text }}
       </div>
     </section>
 
-    <section class="entries-section">
+    <section>
       <h2>Recent Summaries</h2>
 
       <!-- Loading state -->
-      <div
-        v-if="pending"
-        class="loading-entries"
-      >
-        <div class="spinner"></div>
+      <div v-if="pending">
+        <div></div>
         Loading summaries...
       </div>
 
       <!-- Error state -->
-      <div
-        v-if="error"
-        class="error-message"
-      >
-        Failed to load summaries. Please refresh the page.
-      </div>
+      <div v-if="error">Failed to load summaries. Please refresh the page.</div>
 
       <!-- Entries grid -->
-      <div
-        v-else-if="data?.entries && data.entries.length > 0"
-        class="entries-grid"
-      >
+      <div v-else-if="data?.entries && data.entries.length > 0">
         <div
           v-for="entry in data.entries"
           :key="entry.id"
-          class="entry-card"
         >
-          <h3 class="entry-title">{{ entry.title }}</h3>
+          <h3>{{ entry.title }}</h3>
           <a
             :href="entry.url"
             target="_blank"
-            class="entry-url"
           >
             {{ entry.url }}
           </a>
-          <p class="entry-summary">{{ entry.summary }}</p>
-          <small class="entry-date">
+          <p>{{ entry.summary }}</p>
+          <small>
             {{ formatDate(entry.created) }}
           </small>
         </div>
       </div>
 
       <!-- Empty state -->
-      <div
-        v-else
-        class="no-entries"
-      >
-        No summaries yet. Be the first to add one!
-      </div>
+      <div v-else>No summaries yet. Be the first to add one!</div>
     </section>
   </div>
 </template>
 
-<style scoped>
-  .container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 2rem;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
-      sans-serif;
-  }
-
-  .header {
-    text-align: center;
-    margin-bottom: 3rem;
-  }
-
-  .header h1 {
-    font-size: 2.5rem;
-    color: #333;
-    margin-bottom: 0.5rem;
-  }
-
-  .header p {
-    color: #666;
-    font-size: 1.1rem;
-  }
-
-  .form-section {
-    margin-bottom: 3rem;
-  }
-
-  .input-group {
-    display: flex;
-    gap: 1rem;
-    max-width: 600px;
-    margin: 0 auto;
-  }
-
-  .url-input {
-    flex: 1;
-    padding: 0.75rem 1rem;
-    border: 2px solid #e1e5e9;
-    border-radius: 8px;
-    font-size: 1rem;
-    transition: border-color 0.2s;
-  }
-
-  .url-input:focus {
-    outline: none;
-    border-color: #007bff;
-  }
-
-  .submit-btn {
-    padding: 0.75rem 1.5rem;
-    background: #007bff;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: background-color 0.2s;
-    white-space: nowrap;
-  }
-
-  .submit-btn:hover:not(:disabled) {
-    background: #0056b3;
-  }
-
-  .submit-btn:disabled {
-    background: #ccc;
-    cursor: not-allowed;
-  }
-
-  .loading {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-
-  .spinner {
-    width: 16px;
-    height: 16px;
-    border: 2px solid transparent;
-    border-top: 2px solid currentColor;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-  }
-
-  @keyframes spin {
-    to {
-      transform: rotate(360deg);
-    }
-  }
-
-  .message {
-    margin-top: 1rem;
-    padding: 0.75rem 1rem;
-    border-radius: 8px;
-    text-align: center;
-    max-width: 600px;
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-  .message.error {
-    background: #f8d7da;
-    color: #721c24;
-    border: 1px solid #f5c6cb;
-  }
-
-  .entries-section h2 {
-    text-align: center;
-    margin-bottom: 2rem;
-    color: #333;
-  }
-
-  .loading-entries {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 1rem;
-    padding: 2rem;
-    color: #666;
-    font-size: 1.1rem;
-  }
-
-  .error-message {
-    text-align: center;
-    padding: 2rem;
-    color: #721c24;
-    background: #f8d7da;
-    border: 1px solid #f5c6cb;
-    border-radius: 8px;
-    margin: 0 auto;
-    max-width: 600px;
-  }
-
-  .entries-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-    gap: 1.5rem;
-  }
-
-  .entry-card {
-    background: white;
-    border: 1px solid #e1e5e9;
-    border-radius: 12px;
-    padding: 1.5rem;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s, box-shadow 0.2s;
-  }
-
-  .entry-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
-  }
-
-  .entry-title {
-    margin: 0 0 0.5rem 0;
-    color: #333;
-    font-size: 1.2rem;
-    line-height: 1.4;
-  }
-
-  .entry-url {
-    display: block;
-    color: #007bff;
-    text-decoration: none;
-    font-size: 0.9rem;
-    margin-bottom: 1rem;
-    word-break: break-all;
-  }
-
-  .entry-url:hover {
-    text-decoration: underline;
-  }
-
-  .entry-summary {
-    color: #555;
-    line-height: 1.6;
-    margin: 0 0 1rem 0;
-  }
-
-  .entry-date {
-    color: #888;
-    font-size: 0.85rem;
-  }
-
-  .no-entries {
-    text-align: center;
-    padding: 3rem;
-    color: #666;
-    font-size: 1.1rem;
-    background: #f8f9fa;
-    border-radius: 12px;
-    border: 2px dashed #dee2e6;
-  }
-
-  @media (max-width: 768px) {
-    .container {
-      padding: 1rem;
-    }
-
-    .input-group {
-      flex-direction: column;
-    }
-
-    .entries-grid {
-      grid-template-columns: 1fr;
-    }
-
-    .header h1 {
-      font-size: 2rem;
-    }
-  }
-</style>
+<style scoped></style>
 
 <script setup>
   const url = ref('')
