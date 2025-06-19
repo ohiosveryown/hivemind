@@ -136,7 +136,7 @@
       <div v-if="error">Failed to load summaries. Please refresh the page.</div>
 
       <!-- Entries grid -->
-      <div v-else-if="data?.entries && data.entries.length > 0">
+      <!-- <div v-else-if="data?.entries && data.entries.length > 0">
         <div
           v-for="entry in data.entries"
           :key="entry.id"
@@ -153,10 +153,40 @@
             {{ formatDate(entry.created) }}
           </small>
         </div>
-      </div>
+      </div> -->
+
+      <!-- Table -->
+      <table>
+        <thead>
+          <tr>
+            <th class="table-header">Title</th>
+            <th>Summary</th>
+            <th>Created</th>
+          </tr>
+        </thead>
+        <tbody v-if="data?.entries && data.entries.length > 0">
+          <tr
+            v-for="entry in data.entries"
+            :key="entry.id"
+          >
+            <td class="title">
+              <a
+                :href="entry.url"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="title-link"
+              >
+                {{ entry.title }}
+              </a>
+            </td>
+            <td class="summary">{{ entry.summary }}</td>
+            <td>{{ formatDate(entry.created) }}</td>
+          </tr>
+        </tbody>
+      </table>
 
       <!-- Empty state -->
-      <div v-else>No summaries yet. Be the first to add one!</div>
+      <!-- <div v-else>No summaries yet. Be the first to add one!</div> -->
     </section>
   </div>
 </template>
@@ -228,6 +258,63 @@
       background: #f7fafc;
       cursor: not-allowed;
     }
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 2rem;
+    letter-spacing: -0.25px;
+  }
+
+  th,
+  td {
+    // border: 1px solid #e2e8f0;
+    padding: 1.2rem;
+    text-align: left;
+  }
+
+  th {
+    border-bottom: 1px solid #e2e8f0;
+    border-right: 1px solid #e2e8f0;
+    opacity: 0.6;
+  }
+
+  th:last-child {
+    border-right: none;
+  }
+
+  .table-header {
+    display: flex;
+    flex-direction: row;
+    gap: 0.4rem;
+    align-items: center;
+  }
+
+  td {
+    vertical-align: top;
+    border-bottom: 1px solid #e2e8f0;
+    border-right: 1px solid #e2e8f0;
+  }
+
+  td:last-child {
+    border-right: none;
+  }
+
+  td.title {
+    max-width: 20rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  td.title a {
+    font-weight: 600;
+    text-decoration: underline;
+  }
+
+  td.summary {
+    max-width: 36rem;
   }
 </style>
 
@@ -309,6 +396,6 @@
   }
 
   const formatDate = (dateStr) => {
-    return new Date(dateStr).toLocaleString()
+    return new Date(dateStr).toLocaleDateString()
   }
 </script>
