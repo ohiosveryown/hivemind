@@ -1,0 +1,15 @@
+node_modules
+*.log*
+.nuxt
+.nitro
+.cache
+.editorconfig
+.output
+.data
+.env
+.npmrc
+.DS_Store
+dist
+cd
+todos.md
+TAG_NORMALIZATION.md
