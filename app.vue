@@ -215,6 +215,15 @@
 <style lang="scss" scoped>
   @import '@/assets/style/grid.scss';
 
+  .container {
+    margin: 0 auto;
+    max-width: 88vw;
+    @include breakpoint(md) {
+      max-width: var(--max-width);
+      padding: 0;
+    }
+  }
+
   header {
     display: flex;
     flex-direction: column;
