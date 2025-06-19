@@ -36,7 +36,7 @@
       </svg> -->
       <h1>HiveMind</h1>
       <h2>
-        It’s like having a book report buddy do all the reading to tell you the
+        It’s like having a book report buddy do all the reading and tell you the
         important parts.
       </h2>
     </header>
@@ -115,7 +115,7 @@
                 </filter>
               </defs>
             </svg>
-            <span>Add</span>
+            <span class="button-label">Add</span>
           </span>
         </button>
       </form>
@@ -179,7 +179,7 @@
                   d="M5.5 4h5V2H12v2h2v10H2V4h2V2h1.5v2Zm-2 8.5h9V7h-9v5.5Z"
                 />
               </svg>
-              Created
+              Date Added
             </th>
           </tr>
         </thead>
@@ -199,7 +199,9 @@
               </a>
             </td>
             <td class="summary">{{ entry.summary }}</td>
-            <td>{{ formatDate(entry.created) }}</td>
+            <td class="created">
+              {{ formatDate(entry.created) }}
+            </td>
           </tr>
         </tbody>
       </table>
@@ -312,6 +314,7 @@
     vertical-align: top;
     border-bottom: 1px solid #e2e8f0;
     border-right: 1px solid #e2e8f0;
+    font-weight: 500;
   }
 
   td:last-child {
@@ -332,6 +335,11 @@
 
   td.summary {
     max-width: 36rem;
+  }
+
+  td.summary,
+  td.created {
+    opacity: 0.8;
   }
 </style>
 
