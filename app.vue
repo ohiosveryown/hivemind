@@ -36,8 +36,8 @@
       </svg> -->
       <h1>HiveMind</h1>
       <h2>
-        It's like having a super-smart friend do all the reading and tell you
-        the important parts.
+        It’s like having a book report buddy do all the reading to tell you the
+        important parts.
       </h2>
     </header>
 
