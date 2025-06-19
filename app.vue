@@ -1,7 +1,13 @@
 <template>
   <div class="container">
     <header>
-      <svg
+      <img
+        src="https://res.cloudinary.com/dn1q8h2ga/image/upload/v1750369152/hive_2x_tixrhn.webp"
+        alt=""
+        class="hive"
+      />
+
+      <!-- <svg
         class="logo"
         width="33"
         height="29"
@@ -27,93 +33,91 @@
             d="m29 14.027-3.25 1.813a2.566 2.566 0 0 1-2.5 0v0a2.566 2.566 0 0 0-2.5 0l-1.08.602M21.93 21.143l.584.24a4 4 0 0 0 3.873-.46l.506-.369M25 7.748l-4.33 2.415"
           />
         </g>
-      </svg>
+      </svg> -->
       <h1>HiveMind</h1>
       <h2>
-        It’s like having a super-smart friend do all the reading and tell you
+        It's like having a super-smart friend do all the reading and tell you
         the important parts.
       </h2>
     </header>
 
     <section class="form">
       <form @submit.prevent="handleSubmit">
-        <div>
-          <input
-            v-model="url"
-            type="url"
-            placeholder="https://example.com/article"
-            required
-            :disabled="isLoading"
-          />
-          <button
-            class="primary"
-            type="submit"
-            :disabled="isLoading || !url.trim()"
+        <input
+          v-model="url"
+          type="url"
+          placeholder="Add URL..."
+          required
+          :disabled="isLoading"
+        />
+        <button
+          class="primary"
+          type="submit"
+          :disabled="isLoading || !url.trim()"
+        >
+          <span v-if="isLoading">
+            <div></div>
+            Processing...
+          </span>
+          <span
+            class="button-wrapper"
+            v-else
           >
-            <span v-if="isLoading">
-              <div></div>
-              Processing...
-            </span>
-            <span
-              class="button-wrapper"
-              v-else
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="none"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
-                fill="none"
-              >
-                <g filter="url(#a)">
-                  <path
-                    fill="#fff"
-                    d="M8.75 3v4.25H13v1.5H8.75V13h-1.5V8.75H3v-1.5h4.25V3h1.5Z"
+              <g filter="url(#a)">
+                <path
+                  fill="#fff"
+                  d="M8.75 3v4.25H13v1.5H8.75V13h-1.5V8.75H3v-1.5h4.25V3h1.5Z"
+                />
+              </g>
+              <defs>
+                <filter
+                  id="a"
+                  width="14"
+                  height="14"
+                  x="1"
+                  y="2"
+                  color-interpolation-filters="sRGB"
+                  filterUnits="userSpaceOnUse"
+                >
+                  <feFlood
+                    flood-opacity="0"
+                    result="BackgroundImageFix"
                   />
-                </g>
-                <defs>
-                  <filter
-                    id="a"
-                    width="14"
-                    height="14"
-                    x="1"
-                    y="2"
-                    color-interpolation-filters="sRGB"
-                    filterUnits="userSpaceOnUse"
-                  >
-                    <feFlood
-                      flood-opacity="0"
-                      result="BackgroundImageFix"
-                    />
-                    <feColorMatrix
-                      in="SourceAlpha"
-                      result="hardAlpha"
-                      values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
-                    />
-                    <feOffset dy="1" />
-                    <feGaussianBlur stdDeviation="1" />
-                    <feComposite
-                      in2="hardAlpha"
-                      operator="out"
-                    />
-                    <feColorMatrix
-                      values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0"
-                    />
-                    <feBlend
-                      in2="BackgroundImageFix"
-                      result="effect1_dropShadow_27_2141"
-                    />
-                    <feBlend
-                      in="SourceGraphic"
-                      in2="effect1_dropShadow_27_2141"
-                      result="shape"
-                    />
-                  </filter>
-                </defs>
-              </svg>
-              <span>Add</span>
-            </span>
-          </button>
-        </div>
+                  <feColorMatrix
+                    in="SourceAlpha"
+                    result="hardAlpha"
+                    values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+                  />
+                  <feOffset dy="1" />
+                  <feGaussianBlur stdDeviation="1" />
+                  <feComposite
+                    in2="hardAlpha"
+                    operator="out"
+                  />
+                  <feColorMatrix
+                    values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0"
+                  />
+                  <feBlend
+                    in2="BackgroundImageFix"
+                    result="effect1_dropShadow_27_2141"
+                  />
+                  <feBlend
+                    in="SourceGraphic"
+                    in2="effect1_dropShadow_27_2141"
+                    result="shape"
+                  />
+                </filter>
+              </defs>
+            </svg>
+            <span>Add</span>
+          </span>
+        </button>
       </form>
 
       <div v-if="message.text">
@@ -175,10 +179,54 @@
     margin: 0 auto;
   }
 
+  .hive {
+    width: 13rem;
+    height: auto;
+    margin: 0 auto;
+    pointer-events: none;
+  }
+
+  header h1 {
+    margin-top: -2rem;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+
   .form {
     margin: 0 auto 3.2rem;
     @include breakpoint(md) {
-      max-width: 22rem;
+      max-width: 26rem;
+    }
+  }
+
+  input {
+    width: 100%;
+    padding: 1.2rem 1.2rem;
+    font-weight: 550;
+    font-size: 1.4rem;
+    letter-spacing: -0.25px;
+    border-radius: 11px;
+    border: none;
+    background: #f6f6f6;
+    transition: all 0.2s ease;
+
+    &::placeholder {
+      color: #a0aec0;
+    }
+
+    &:focus {
+      outline: none;
+      border-color: #858586;
+      box-shadow: 0 0 0 1px rgba(163, 166, 168, 0.32);
+    }
+
+    &:disabled {
+      background: #f7fafc;
+      cursor: not-allowed;
     }
   }
 </style>
