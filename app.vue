@@ -135,33 +135,52 @@
       <!-- Error state -->
       <div v-if="error">Failed to load summaries. Please refresh the page.</div>
 
-      <!-- Entries grid -->
-      <!-- <div v-else-if="data?.entries && data.entries.length > 0">
-        <div
-          v-for="entry in data.entries"
-          :key="entry.id"
-        >
-          <h3>{{ entry.title }}</h3>
-          <a
-            :href="entry.url"
-            target="_blank"
-          >
-            {{ entry.url }}
-          </a>
-          <p>{{ entry.summary }}</p>
-          <small>
-            {{ formatDate(entry.created) }}
-          </small>
-        </div>
-      </div> -->
-
       <!-- Table -->
       <table>
         <thead>
           <tr>
-            <th class="table-header">Title</th>
-            <th>Summary</th>
-            <th>Created</th>
+            <th class="table-header">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="none"
+              >
+                <g fill="#55534E">
+                  <path
+                    d="M3.97 3.557h2.19l3.066 8.886H7.639l-.69-2H3.181l-.69 2H.904L3.97 3.557ZM3.7 8.943h2.733L5.09 5.057h-.052L3.7 8.943ZM13.596 7.264l.156-.373h1.344v5.552h-1.344l-.156-.637.004-.007a2.315 2.315 0 0 1-1.63.644c-1.46 0-2.624-1.21-2.624-2.908s1.165-2.909 2.625-2.909c.64 0 1.197.233 1.625.638Zm-2.75 2.268c0 .916.572 1.568 1.375 1.568s1.375-.652 1.375-1.568-.572-1.568-1.375-1.568-1.375.652-1.375 1.568Z"
+                  />
+                </g>
+              </svg>
+              Title
+            </th>
+            <th class="table-header">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="none"
+              >
+                <path
+                  fill="#55534E"
+                  d="M14 3.25v1.5H2v-1.5h12ZM2 8.75h12v-1.5H2v1.5Zm0 4h6.3v-1.5H2v1.5Z"
+                />
+              </svg>
+              Summary
+            </th>
+            <th class="table-header">
+              <svg
+                width="16"
+                height="16"
+                fill="none"
+              >
+                <path
+                  fill="#55534E"
+                  d="M5.5 4h5V2H12v2h2v10H2V4h2V2h1.5v2Zm-2 8.5h9V7h-9v5.5Z"
+                />
+              </svg>
+              Created
+            </th>
           </tr>
         </thead>
         <tbody v-if="data?.entries && data.entries.length > 0">
@@ -269,7 +288,6 @@
 
   th,
   td {
-    // border: 1px solid #e2e8f0;
     padding: 1.2rem;
     text-align: left;
   }
@@ -284,11 +302,10 @@
     border-right: none;
   }
 
-  .table-header {
-    display: flex;
-    flex-direction: row;
-    gap: 0.4rem;
-    align-items: center;
+  .table-header svg {
+    display: inline-block;
+    margin-right: 0.3rem;
+    transform: translateY(0.3rem);
   }
 
   td {
