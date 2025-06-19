@@ -5,9 +5,21 @@ export async function fetchUrlContent(url: string): Promise<{ textContent: strin
 
     // Extract H1 content first
     const h1Match = html.match(/<h1[^>]*>(.*?)<\/h1>/i)
-    const h1Content = h1Match
+    let h1Content = h1Match
       ? h1Match[1].replace(/<[^>]*>/g, '').trim()
       : ''
+
+    // Clean up the H1 content
+    if (h1Content) {
+      // Remove common separators and everything after them
+      const separators = ['|', '»', '–', '-', '•', ':', '｜']
+      for (const separator of separators) {
+        const parts = h1Content.split(separator)
+        if (parts.length > 1) {
+          h1Content = parts[0].trim()
+        }
+      }
+    }
 
     // Basic HTML content extraction
     const textContent = html

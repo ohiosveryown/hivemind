@@ -97,82 +97,6 @@
   </div>
 </template>
 
-<script setup>
-  const url = ref('')
-  const isLoading = ref(false)
-  const message = ref({ text: '', type: '' })
-
-  // Use useFetch for reactive data fetching with loading states
-  const { data, pending, error, refresh } = await useFetch('/api/entries')
-
-  const handleSubmit = async () => {
-    if (!url.value.trim()) return
-
-    isLoading.value = true
-    message.value = { text: '', type: '' }
-
-    try {
-      // Step 1: Summarize the URL
-      const summaryResult = await $fetch('/api/summarize', {
-        method: 'POST',
-        body: { url: url.value },
-      })
-
-      // Step 2: Save to Notion
-      await $fetch('/api/save-to-notion', {
-        method: 'POST',
-        body: {
-          url: summaryResult.url,
-          summary: summaryResult.summary,
-          title:
-            summaryResult.h1Content ||
-            extractTitle(summaryResult.content) ||
-            summaryResult.url,
-        },
-      })
-
-      // Step 3: Refresh entries
-      await refresh()
-
-      // Clear form
-      url.value = ''
-    } catch (error) {
-      message.value = {
-        text: error.data?.message || 'Failed to process URL. Please try again.',
-        type: 'error',
-      }
-    } finally {
-      isLoading.value = false
-    }
-  }
-
-  const extractTitle = (content) => {
-    if (!content) return ''
-
-    // Remove the "..." suffix that we add in the API
-    const cleanContent = content.replace(/\s*\.\.\.$/, '')
-
-    // Split into sentences and find the first meaningful one
-    const sentences = cleanContent
-      .split(/[.!?]+/)
-      .filter((s) => s.trim().length > 10)
-
-    if (sentences.length === 0) return ''
-
-    // Take the first sentence, clean it up, and limit length
-    const title = sentences[0]
-      .trim()
-      .replace(/\s+/g, ' ') // Normalize whitespace
-      .substring(0, 100)
-
-    return title
-  }
-
-  const formatDate = (dateStr) => {
-    return new Date(dateStr).toLocaleString()
-  }
-</script>
-
 <style scoped>
   .container {
     max-width: 1200px;
@@ -387,3 +311,85 @@
     }
   }
 </style>
+
+<script setup>
+  const url = ref('')
+  const isLoading = ref(false)
+  const message = ref({ text: '', type: '' })
+
+  // Use useFetch for reactive data fetching with loading states
+  const { data, pending, error, refresh } = await useFetch('/api/entries')
+
+  const handleSubmit = async () => {
+    if (!url.value.trim()) return
+
+    isLoading.value = true
+    message.value = { text: '', type: '' }
+
+    try {
+      // Step 1: Summarize the URL
+      const summaryResult = await $fetch('/api/summarize', {
+        method: 'POST',
+        body: { url: url.value },
+      })
+
+      // Step 2: Save to Notion
+      await $fetch('/api/save-to-notion', {
+        method: 'POST',
+        body: {
+          url: summaryResult.url,
+          summary: summaryResult.summary,
+          title:
+            summaryResult.h1Content ||
+            extractTitle(summaryResult.content) ||
+            summaryResult.url,
+        },
+      })
+
+      // Step 3: Refresh entries
+      await refresh()
+
+      // Clear form
+      url.value = ''
+    } catch (error) {
+      message.value = {
+        text: error.data?.message || 'Failed to process URL. Please try again.',
+        type: 'error',
+      }
+    } finally {
+      isLoading.value = false
+    }
+  }
+
+  const extractTitle = (content) => {
+    if (!content) return ''
+
+    // First try to get a clean title from the content
+    let title = content
+
+    // Remove the "..." suffix that we add in the API
+    title = title.replace(/\s*\.\.\.$/, '')
+
+    // Remove common separators and everything after them
+    const separators = ['|', '»', '–', '-', '•', ':', '｜']
+    for (const separator of separators) {
+      const parts = title.split(separator)
+      if (parts.length > 1) {
+        // Take the first part before the separator
+        title = parts[0]
+      }
+    }
+
+    // Clean up whitespace and normalize
+    title = title
+      .trim()
+      .replace(/\s+/g, ' ') // Normalize whitespace
+      .substring(0, 100) // Limit length
+
+    return title
+  }
+
+  const formatDate = (dateStr) => {
+    return new Date(dateStr).toLocaleString()
+  }
+</script>
