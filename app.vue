@@ -36,7 +36,7 @@
       </svg> -->
       <h1>HiveMind</h1>
       <h2>
-        It’s like having a book report buddy do all the reading and tell you the
+        It's like having a book report buddy do all the reading and tell you the
         important parts.
       </h2>
     </header>
@@ -181,6 +181,20 @@
               </svg>
               Date Added
             </th>
+            <th class="table-header">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="none"
+              >
+                <path
+                  fill="#55534E"
+                  d="M8.5 2.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0ZM12.5 2.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0ZM8.5 6.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0ZM12.5 6.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0ZM8.5 10.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0ZM12.5 10.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0ZM8.5 14.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0ZM12.5 14.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z"
+                />
+              </svg>
+              Tags
+            </th>
           </tr>
         </thead>
         <tbody v-if="data?.entries && data.entries.length > 0">
@@ -201,6 +215,25 @@
             <td class="summary">{{ entry.summary }}</td>
             <td class="created">
               {{ formatDate(entry.created) }}
+            </td>
+            <td class="tags">
+              <div
+                v-if="entry.tags && entry.tags.length > 0"
+                class="tag-list"
+              >
+                <span
+                  v-for="tag in entry.tags"
+                  :key="tag"
+                  class="tag"
+                >
+                  {{ tag }}
+                </span>
+              </div>
+              <span
+                v-else
+                class="no-tags"
+                >No tags</span
+              >
             </td>
           </tr>
         </tbody>
@@ -349,6 +382,32 @@
   td.summary,
   td.created {
     opacity: 0.68;
+  }
+
+  td.tags {
+    max-width: 20rem;
+  }
+
+  .tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .tag {
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    background: #f0f0f0;
+    border-radius: 0.8rem;
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: #555;
+    border: 1px solid #e0e0e0;
+  }
+
+  .no-tags {
+    opacity: 0.4;
+    font-style: italic;
   }
 </style>
 

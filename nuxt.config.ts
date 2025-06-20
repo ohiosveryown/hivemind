@@ -1,6 +1,6 @@
 export default defineNuxtConfig({
   devtools: { enabled: true },
-  css: ["./assets/style/reset.scss"],
+  css: ["./assets/style/reset.scss", "./assets/style/grid.scss"],
   runtimeConfig: {
     claudeApiKey: process.env.CLAUDE_API_KEY,
     notionApiKey: process.env.NOTION_API_KEY,

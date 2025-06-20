@@ -12,6 +12,19 @@ export default defineEventHandler(async (event) => {
       })
     }
 
+    // Generate tags based on content
+    let tags: string[] = []
+    try {
+      const tagResponse = await $fetch('/api/generate-tags', {
+        method: 'POST',
+        body: { title, summary }
+      })
+      tags = tagResponse.tags || []
+    } catch (tagError) {
+      console.warn('Failed to generate tags:', tagError)
+      // Continue without tags if generation fails
+    }
+
     // Initialize Notion client
     const notion = new Client({
       auth: config.notionApiKey
@@ -43,16 +56,20 @@ export default defineEventHandler(async (event) => {
               }
             }
           ]
+        },
+        'Tags': {
+          multi_select: tags.map(tag => ({ name: tag }))
         }
       }
     })
 
     return {
       success: true,
-      notionPageId: response.id
+      notionPageId: response.id,
+      tags
     }
 
-  } catch (error) {
+  } catch (error: any) {
     throw createError({
       statusCode: 500,
       statusMessage: error.message || 'Failed to save to Notion'

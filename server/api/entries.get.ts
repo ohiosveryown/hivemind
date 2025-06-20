@@ -23,12 +23,16 @@ export default defineEventHandler(async (event) => {
       const createdTime = page.properties.Created?.created_time || page.created_time
       const createdDate = createdTime ? new Date(createdTime).toISOString().split('T')[0] : ''
 
+      // Extract tags from multi-select property
+      const tags = page.properties.Tags?.multi_select?.map((tag: any) => tag.name) || []
+
       return {
         id: page.id,
         title: page.properties.Title?.title?.[0]?.text?.content || 'Untitled',
         url: page.properties.URL?.url || '',
         summary: page.properties.Summary?.rich_text?.[0]?.text?.content || '',
-        created: createdDate
+        created: createdDate,
+        tags
       }
     })
 
