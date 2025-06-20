@@ -259,7 +259,7 @@
   .form {
     margin: 0 auto 3.2rem;
     @include breakpoint(md) {
-      max-width: 26rem;
+      max-width: 28rem;
     }
   }
 
@@ -348,7 +348,7 @@
 
   td.summary,
   td.created {
-    opacity: 0.8;
+    opacity: 0.68;
   }
 </style>
 
