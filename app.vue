@@ -1,39 +1,29 @@
 <template>
   <div class="container">
     <header>
-      <img
-        src="https://res.cloudinary.com/dn1q8h2ga/image/upload/v1750369152/hive_2x_tixrhn.webp"
-        alt=""
-        class="hive"
-      />
+      <div class="logo">
+        <img
+          src="https://res.cloudinary.com/dn1q8h2ga/image/upload/v1750450902/hivemind/bee-1_exhzoz.webp"
+          alt=""
+          class="bee bee-1"
+        />
+        <img
+          src="https://res.cloudinary.com/dn1q8h2ga/image/upload/v1750450902/hivemind/bee-2_de2izh.webp"
+          alt=""
+          class="bee bee-2"
+        />
+        <img
+          src="https://res.cloudinary.com/dn1q8h2ga/image/upload/v1750450904/hivemind/bee-3_zn97nk.webp"
+          alt=""
+          class="bee bee-3"
+        />
+        <img
+          src="https://res.cloudinary.com/dn1q8h2ga/image/upload/v1750451525/hivemind/hive_2x_jeezh8.webp"
+          alt=""
+          class="hive"
+        />
+      </div>
 
-      <!-- <svg
-        class="logo"
-        width="33"
-        height="29"
-        fill="none"
-      >
-        <g
-          stroke="#000"
-          stroke-width="2"
-          opacity=".76"
-        >
-          <path
-            d="M16.5 21.863V4.435a3 3 0 0 0-4.461-2.62l-2.021 1.127A3.29 3.29 0 0 0 8.33 5.815 3.29 3.29 0 0 1 6.643 8.69l-.932.52A3.336 3.336 0 0 0 4 12.121v.528c0 .884-.478 1.698-1.25 2.128a2.437 2.437 0 0 0-1.25 2.129v3.203a6 6 0 0 0 2.856 5.11l2.927 1.8a6 6 0 0 0 6.393-.065l.073-.047a6 6 0 0 0 2.751-5.045Z"
-          />
-          <path
-            stroke-linecap="round"
-            d="m4 14.027 3.25 1.813a2.566 2.566 0 0 0 2.5 0v0a2.566 2.566 0 0 1 2.5 0l1.08.602M11.07 21.143l-.584.24a4 4 0 0 1-3.873-.46l-.506-.369M8 7.748l4.33 2.415"
-          />
-          <path
-            d="M16.5 21.863V4.435a3 3 0 0 1 4.461-2.62l2.022 1.127a3.29 3.29 0 0 1 1.687 2.873 3.29 3.29 0 0 0 1.687 2.874l.932.52A3.336 3.336 0 0 1 29 12.121v.528c0 .884.478 1.698 1.25 2.128a2.437 2.437 0 0 1 1.25 2.129v3.203a6 6 0 0 1-2.856 5.11l-2.927 1.8a6 6 0 0 1-6.393-.065l-.073-.047a6 6 0 0 1-2.751-5.045Z"
-          />
-          <path
-            stroke-linecap="round"
-            d="m29 14.027-3.25 1.813a2.566 2.566 0 0 1-2.5 0v0a2.566 2.566 0 0 0-2.5 0l-1.08.602M21.93 21.143l.584.24a4 4 0 0 0 3.873-.46l.506-.369M25 7.748l-4.33 2.415"
-          />
-        </g>
-      </svg> -->
       <h1>HiveMind</h1>
       <h2>
         It's like having a book report buddy do all the reading and tell you the
@@ -265,6 +255,50 @@
     }
   }
 
+  .logo {
+    position: relative;
+  }
+
+  .bee {
+    position: absolute;
+    z-index: var(--z1);
+    pointer-events: none;
+  }
+
+  .bee-1 {
+    top: 0;
+    left: 4.2rem;
+    width: 1.6rem;
+    height: auto;
+    animation: hover 3.5s ease-in-out infinite 0.25s;
+  }
+
+  .bee-2 {
+    top: 0rem;
+    right: 4.2rem;
+    width: 1.4rem;
+    height: auto;
+    animation: hover 3s ease-in-out infinite 0s;
+  }
+
+  .bee-3 {
+    top: -1.6rem;
+    left: 3.2rem;
+    width: 1.8rem;
+    height: auto;
+    animation: hover 3.5s ease-in-out infinite;
+  }
+
+  @keyframes hover {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-8px);
+    }
+  }
+
   header {
     display: flex;
     flex-direction: column;
@@ -380,7 +414,7 @@
 
   .favicon {
     display: inline-block;
-    margin: 0.4rem 0.6rem 0 0;
+    margin: 0.4rem 0.8rem 0 0;
     width: 16px;
     height: 16px;
     border-radius: 2px;
