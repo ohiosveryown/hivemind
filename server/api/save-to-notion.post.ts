@@ -1,8 +1,9 @@
 import { Client } from '@notionhq/client'
+import { extractFaviconUrl } from '~/utils/faviconExtractor'
 
 export default defineEventHandler(async (event) => {
   try {
-    const { url, summary, title } = await readBody(event)
+    const { url, summary, title, keyPoints } = await readBody(event)
     const config = useRuntimeConfig()
 
     if (!url || !summary) {
@@ -10,6 +11,15 @@ export default defineEventHandler(async (event) => {
         statusCode: 400,
         statusMessage: 'URL and summary are required'
       })
+    }
+
+    // Extract favicon URL
+    let faviconUrl = ''
+    try {
+      faviconUrl = await extractFaviconUrl(url)
+    } catch (faviconError) {
+      console.warn('Failed to extract favicon:', faviconError)
+      // Continue without favicon if extraction fails
     }
 
     // Generate tags based on content
@@ -23,19 +33,6 @@ export default defineEventHandler(async (event) => {
     } catch (tagError) {
       console.warn('Failed to generate tags:', tagError)
       // Continue without tags if generation fails
-    }
-
-    // Extract key points from summary
-    let keyPoints: string = ''
-    try {
-      const keyPointsResponse = await $fetch('/api/extract-key-points', {
-        method: 'POST',
-        body: { summary }
-      })
-      keyPoints = keyPointsResponse.keyPoints || ''
-    } catch (keyPointsError) {
-      console.warn('Failed to extract key points:', keyPointsError)
-      // Continue without key points if extraction fails
     }
 
     // Initialize Notion client
@@ -74,13 +71,16 @@ export default defineEventHandler(async (event) => {
           rich_text: [
             {
               text: {
-                content: keyPoints
+                content: keyPoints && keyPoints.length > 0 ? keyPoints.join('\n') : ''
               }
             }
           ]
         },
         'Tags': {
           multi_select: tags.map(tag => ({ name: tag }))
+        },
+        'Favicon': {
+          url: faviconUrl || null
         }
       }
     })
@@ -89,7 +89,7 @@ export default defineEventHandler(async (event) => {
       success: true,
       notionPageId: response.id,
       tags,
-      keyPoints
+      faviconUrl
     }
 
   } catch (error: any) {

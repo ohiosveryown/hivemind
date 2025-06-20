@@ -32,7 +32,7 @@ export default defineEventHandler(async (event) => {
     })
 
     // Get summary from Claude
-    const message = await anthropic.messages.create({
+    const summaryMessage = await anthropic.messages.create({
       model: 'claude-sonnet-4-20250514',
       max_tokens: 100,
       messages: [{
@@ -41,11 +41,31 @@ export default defineEventHandler(async (event) => {
       }]
     })
 
-    const summary = message.content[0].type === 'text' ? message.content[0].text : ''
+    const summary = summaryMessage.content[0].type === 'text' ? summaryMessage.content[0].text : ''
+
+    // Get key points from Claude
+    const keyPointsMessage = await anthropic.messages.create({
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: 200,
+      messages: [{
+        role: 'user',
+        content: `Extract exactly 2-3 key points from the following web page content. Each point should be concise (max 15 words) and highlight the most important insights or takeaways. Format as a simple list:\n\n${textContent}`
+      }]
+    })
+
+    const keyPointsText = keyPointsMessage.content[0].type === 'text' ? keyPointsMessage.content[0].text : ''
+
+    // Parse key points into an array
+    const keyPoints = keyPointsText
+      .split('\n')
+      .map(point => point.replace(/^[-•*]\s*/, '').trim()) // Remove bullet points
+      .filter(point => point.length > 0 && point.length <= 50) // Filter valid points
+      .slice(0, 3) // Take max 3 points
 
     return {
       url,
       summary: summary.trim(),
+      keyPoints,
       content: textContent.substring(0, 200) + '...', // Preview for title extraction
       h1Content
     }

@@ -26,17 +26,18 @@ export default defineEventHandler(async (event) => {
       // Extract tags from multi-select property
       const tags = page.properties.Tags?.multi_select?.map((tag: any) => tag.name) || []
 
-      // Extract key points from rich text property
-      const keyPoints = page.properties['Key Points']?.rich_text?.[0]?.text?.content || ''
+      // Extract favicon URL
+      const faviconProperty = page.properties.Favicon
+      const faviconUrl = faviconProperty?.type === 'url' ? faviconProperty.url || '' : ''
 
       return {
         id: page.id,
         title: page.properties.Title?.title?.[0]?.text?.content || 'Untitled',
         url: page.properties.URL?.url || '',
         summary: page.properties.Summary?.rich_text?.[0]?.text?.content || '',
-        keyPoints: keyPoints,
         created: createdDate,
-        tags
+        tags,
+        faviconUrl
       }
     })
 
