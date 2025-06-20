@@ -20,7 +20,9 @@ export default defineEventHandler(async (event) => {
         'algorithm', 'data science', 'predictive', 'automated', 'intelligent',
         'coding agents', 'ai tools', 'generative ai', 'computer vision', 'nlp',
         'natural language processing', 'robotics', 'expert system', 'knowledge base',
-        'openai', 'anthropic', 'claude', 'bard', 'copilot', 'github copilot'
+        'openai', 'anthropic', 'claude', 'bard', 'copilot', 'github copilot',
+        'ai coding', 'autonomous ai', 'ai assistant', 'ai model', 'ai system',
+        'ai development', 'ai programming', 'ai code', 'ai agent'
       ],
       'Woodworking': [
         'woodworking', 'carpentry', 'joinery', 'dovetail', 'mortise', 'tenon',
@@ -32,7 +34,9 @@ export default defineEventHandler(async (event) => {
         'board', 'grain', 'end grain', 'baseline', 'knife line', 'saw cut',
         'paring', 'waste removal', 'fret saw', 'jeweller saw', 'tail board',
         'pin board', 'through dovetail', 'half blind dovetail', 'wood joint',
-        'woodworking technique', 'woodworking tool', 'woodworking jig'
+        'woodworking technique', 'woodworking tool', 'woodworking jig',
+        'stave core', 'door construction', 'frame and panel', 'wood door',
+        'woodworking forum', 'woodworking community', 'woodworking topics'
       ],
       'Programming': [
         'programming', 'coding', 'software development', 'web development',
@@ -40,7 +44,10 @@ export default defineEventHandler(async (event) => {
         'react', 'vue', 'angular', 'node.js', 'database', 'sql', 'api',
         'library', 'git', 'version control', 'debugging', 'deployment',
         'frontend', 'backend', 'full stack', 'ios', 'android',
-        'typescript', 'html', 'css', 'sass', 'scss', 'webpack', 'babel'
+        'typescript', 'html', 'css', 'sass', 'scss', 'webpack', 'babel',
+        'code review', 'pair programming', 'development workflow', 'code generation',
+        'software engineering', 'programming language', 'code editor', 'ide',
+        'development tool', 'programming tool', 'code tool'
       ],
       'Design': [
         'ui design', 'ux design', 'user interface design', 'user experience design',
@@ -88,11 +95,16 @@ export default defineEventHandler(async (event) => {
         'textbook', 'syllabus', 'grade', 'gpa', 'scholarship'
       ],
       'Movies': [
-        'movie', 'film', 'cinema', 'theater', 'director', 'actor', 'actress',
-        'screenplay', 'script', 'box office', 'premiere', 'trailer', 'review',
-        'critic', 'rating', 'oscar', 'award', 'genre', 'drama', 'comedy',
-        'action', 'horror', 'romance', 'documentary', 'indie', 'blockbuster',
-        'sequel', 'prequel', 'remake', 'adaptation', 'box office'
+        'movie review', 'movie trailer', 'movie premiere', 'movie theater', 'movie director',
+        'movie actor', 'movie actress', 'movie screenplay', 'movie script', 'movie box office',
+        'movie critic', 'movie rating', 'movie oscar', 'movie award', 'movie genre',
+        'movie drama', 'movie comedy', 'movie action', 'movie horror', 'movie romance',
+        'movie documentary', 'movie indie', 'movie blockbuster', 'movie sequel', 'movie prequel',
+        'movie remake', 'movie adaptation', 'film review', 'film trailer', 'film premiere',
+        'cinema', 'theater', 'director', 'actor', 'actress', 'screenplay', 'script',
+        'box office', 'premiere', 'trailer', 'critic', 'rating', 'oscar', 'award',
+        'genre', 'drama', 'comedy', 'action', 'horror', 'romance', 'documentary', 'indie',
+        'blockbuster', 'sequel', 'prequel', 'remake', 'adaptation'
       ],
       'Pop Culture': [
         'pop culture', 'celebrity', 'famous', 'star', 'entertainment', 'gossip',
@@ -146,39 +158,21 @@ export default defineEventHandler(async (event) => {
 
     // Define priority order for tags (higher priority tags should be checked first)
     const tagPriority = [
-      'Woodworking', 'Movies', 'Music', 'Books', 'Gaming', 'Sports', 'Food', 'Travel',
+      'Woodworking', 'Movies', 'Music', 'Gaming', 'Sports', 'Food', 'Travel',
       'AI', 'Programming', 'Design', 'Business', 'Health', 'Technology', 'Science',
       'Education', 'Pop Culture', 'Politics', 'Arts'
     ]
 
-    // Find matching tags with improved specificity and priority
+    // Simplified matching logic - just check if keywords are present
     const matchedTags = []
 
-    // First pass: check high-priority tags with exact word boundaries
     for (const tag of tagPriority) {
       const keywords = tagCategories[tag as keyof typeof tagCategories]
-      let matched = false
 
       for (const keyword of keywords) {
-        // Use word boundaries to avoid partial matches
-        const wordBoundaryRegex = new RegExp(`\\b${keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'i')
-        if (wordBoundaryRegex.test(fullText)) {
+        if (fullText.includes(keyword.toLowerCase())) {
           matchedTags.push(tag)
-          matched = true
-          break
-        }
-      }
-
-      // If no exact match, check for phrase matches (less strict)
-      if (!matched) {
-        for (const keyword of keywords) {
-          if (fullText.includes(keyword)) {
-            // Additional check to avoid false positives for very common words
-            if (keyword.length > 3 || ['ai', 'ml', 'ui', 'ux', 'vr', 'ar'].includes(keyword)) {
-              matchedTags.push(tag)
-              break
-            }
-          }
+          break // Only add each tag once per category
         }
       }
     }
@@ -186,8 +180,20 @@ export default defineEventHandler(async (event) => {
     // Apply exclusion rules to prevent false positives
     const finalTags = []
     for (const tag of matchedTags) {
+      // If AI is detected, exclude generic technology/design/movies tags
+      if (matchedTags.includes('AI')) {
+        if (!['Technology', 'Design', 'Movies'].includes(tag)) {
+          finalTags.push(tag)
+        }
+      }
+      // If Programming is detected, exclude generic technology/design/movies tags
+      else if (matchedTags.includes('Programming')) {
+        if (!['Technology', 'Design', 'Movies'].includes(tag)) {
+          finalTags.push(tag)
+        }
+      }
       // If woodworking is detected, exclude generic technology/design tags
-      if (matchedTags.includes('Woodworking')) {
+      else if (matchedTags.includes('Woodworking')) {
         if (!['Technology', 'Design'].includes(tag)) {
           finalTags.push(tag)
         }
@@ -200,12 +206,6 @@ export default defineEventHandler(async (event) => {
       }
       // If music is detected, exclude generic technology tags
       else if (matchedTags.includes('Music')) {
-        if (!['Technology'].includes(tag)) {
-          finalTags.push(tag)
-        }
-      }
-      // If books are detected, exclude generic technology tags
-      else if (matchedTags.includes('Books')) {
         if (!['Technology'].includes(tag)) {
           finalTags.push(tag)
         }
