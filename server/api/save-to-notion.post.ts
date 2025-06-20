@@ -25,6 +25,19 @@ export default defineEventHandler(async (event) => {
       // Continue without tags if generation fails
     }
 
+    // Extract key points from summary
+    let keyPoints: string = ''
+    try {
+      const keyPointsResponse = await $fetch('/api/extract-key-points', {
+        method: 'POST',
+        body: { summary }
+      })
+      keyPoints = keyPointsResponse.keyPoints || ''
+    } catch (keyPointsError) {
+      console.warn('Failed to extract key points:', keyPointsError)
+      // Continue without key points if extraction fails
+    }
+
     // Initialize Notion client
     const notion = new Client({
       auth: config.notionApiKey
@@ -57,6 +70,15 @@ export default defineEventHandler(async (event) => {
             }
           ]
         },
+        'Key Points': {
+          rich_text: [
+            {
+              text: {
+                content: keyPoints
+              }
+            }
+          ]
+        },
         'Tags': {
           multi_select: tags.map(tag => ({ name: tag }))
         }
@@ -66,7 +88,8 @@ export default defineEventHandler(async (event) => {
     return {
       success: true,
       notionPageId: response.id,
-      tags
+      tags,
+      keyPoints
     }
 
   } catch (error: any) {

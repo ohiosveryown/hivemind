@@ -6,34 +6,6 @@
         alt=""
         class="hive"
       />
-
-      <!-- <svg
-        class="logo"
-        width="33"
-        height="29"
-        fill="none"
-      >
-        <g
-          stroke="#000"
-          stroke-width="2"
-          opacity=".76"
-        >
-          <path
-            d="M16.5 21.863V4.435a3 3 0 0 0-4.461-2.62l-2.021 1.127A3.29 3.29 0 0 0 8.33 5.815 3.29 3.29 0 0 1 6.643 8.69l-.932.52A3.336 3.336 0 0 0 4 12.121v.528c0 .884-.478 1.698-1.25 2.128a2.437 2.437 0 0 0-1.25 2.129v3.203a6 6 0 0 0 2.856 5.11l2.927 1.8a6 6 0 0 0 6.393-.065l.073-.047a6 6 0 0 0 2.751-5.045Z"
-          />
-          <path
-            stroke-linecap="round"
-            d="m4 14.027 3.25 1.813a2.566 2.566 0 0 0 2.5 0v0a2.566 2.566 0 0 1 2.5 0l1.08.602M11.07 21.143l-.584.24a4 4 0 0 1-3.873-.46l-.506-.369M8 7.748l4.33 2.415"
-          />
-          <path
-            d="M16.5 21.863V4.435a3 3 0 0 1 4.461-2.62l2.022 1.127a3.29 3.29 0 0 1 1.687 2.873 3.29 3.29 0 0 0 1.687 2.874l.932.52A3.336 3.336 0 0 1 29 12.121v.528c0 .884.478 1.698 1.25 2.128a2.437 2.437 0 0 1 1.25 2.129v3.203a6 6 0 0 1-2.856 5.11l-2.927 1.8a6 6 0 0 1-6.393-.065l-.073-.047a6 6 0 0 1-2.751-5.045Z"
-          />
-          <path
-            stroke-linecap="round"
-            d="m29 14.027-3.25 1.813a2.566 2.566 0 0 1-2.5 0v0a2.566 2.566 0 0 0-2.5 0l-1.08.602M21.93 21.143l.584.24a4 4 0 0 0 3.873-.46l.506-.369M25 7.748l-4.33 2.415"
-          />
-        </g>
-      </svg> -->
       <h1>HiveMind</h1>
       <h2>
         It's like having a book report buddy do all the reading and tell you the
@@ -170,6 +142,20 @@
             </th>
             <th class="table-header">
               <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="none"
+              >
+                <path
+                  fill="#55534E"
+                  d="M8 1.5a.75.75 0 0 1 .75.75v1.5a.75.75 0 0 1-1.5 0v-1.5A.75.75 0 0 1 8 1.5ZM3.5 4.75a.75.75 0 0 1 1.5 0v1.5a.75.75 0 0 1-1.5 0v-1.5Zm9 0a.75.75 0 0 1 1.5 0v1.5a.75.75 0 0 1-1.5 0v-1.5ZM2.5 8a.75.75 0 0 1 .75-.75h1.5a.75.75 0 0 1 0 1.5h-1.5A.75.75 0 0 1 2.5 8Zm9.5 0a.75.75 0 0 1 .75-.75h1.5a.75.75 0 0 1 0 1.5h-1.5A.75.75 0 0 1 12 8Zm-6 2.5a.75.75 0 0 1 .75.75v1.5a.75.75 0 0 1-1.5 0v-1.5a.75.75 0 0 1 .75-.75Z"
+                />
+              </svg>
+              Key Points
+            </th>
+            <!-- <th class="table-header">
+              <svg
                 width="16"
                 height="16"
                 fill="none"
@@ -180,7 +166,7 @@
                 />
               </svg>
               Date Added
-            </th>
+            </th> -->
             <th class="table-header">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -213,9 +199,26 @@
               </a>
             </td>
             <td class="summary">{{ entry.summary }}</td>
-            <td class="created">
-              {{ formatDate(entry.created) }}
+            <td class="key-points">
+              <div
+                v-if="entry.keyPoints && entry.keyPoints.trim()"
+                class="key-points-container"
+              >
+                <div class="key-points-content">
+                  <span class="key-points-string">
+                    {{ entry.keyPoints }}
+                  </span>
+                </div>
+              </div>
+              <span
+                v-else
+                class="no-key-points"
+                >No key points</span
+              >
             </td>
+            <!-- <td class="created">
+              {{ formatDate(entry.created) }}
+            </td> -->
             <td class="tags">
               <div
                 v-if="entry.tags && entry.tags.length > 0"
@@ -251,9 +254,10 @@
   .container {
     margin: 0 auto;
     max-width: 88vw;
+    padding-bottom: 10rem;
     @include breakpoint(md) {
       max-width: var(--max-width);
-      padding: 0;
+      padding: 0 4rem 10rem;
     }
   }
 
@@ -384,6 +388,68 @@
     opacity: 0.68;
   }
 
+  td.key-points {
+    vertical-align: top;
+    padding: 0;
+  }
+
+  .key-points-container {
+    position: relative;
+    height: 12rem;
+    min-width: 100%;
+    width: 32rem;
+    // border: 1px solid red;
+  }
+
+  .key-points-content {
+    // border: 2px solid blue;
+    position: absolute;
+    top: 0;
+    left: 0;
+    min-width: 100%;
+    width: 100%;
+    min-height: 100%;
+    height: 100%;
+    max-height: 80px;
+    padding: 1.2rem;
+    overflow: hidden;
+    white-space: pre-line;
+    border-radius: 8px;
+    z-index: 1;
+  }
+
+  .key-points-content::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 25px;
+    background: linear-gradient(to top, #fff, rgba(255, 255, 255, 0));
+    pointer-events: none;
+    transition: all 1ms ease;
+  }
+
+  td.key-points:hover .key-points-content {
+    max-height: 400px;
+    width: 32rem;
+    overflow: auto;
+    background: #fff;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+    height: auto;
+    transition: all 1ms ease;
+  }
+
+  .key-points-string {
+    font-weight: 500;
+    opacity: 0.68;
+  }
+
+  td.key-points:hover .key-points-content::after {
+    opacity: 0;
+  }
+
   td.tags {
     max-width: 20rem;
   }
@@ -406,6 +472,11 @@
   }
 
   .no-tags {
+    opacity: 0.4;
+    font-style: italic;
+  }
+
+  .no-key-points {
     opacity: 0.4;
     font-style: italic;
   }
