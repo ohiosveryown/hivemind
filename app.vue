@@ -8,7 +8,7 @@
           class="bee bee-1"
         />
         <img
-          src="https://res.cloudinary.com/dn1q8h2ga/image/upload/v1750450902/hivemind/bee-2_de2izh.webp"
+          src="https://res.cloudinary.com/dn1q8h2ga/image/upload/a_hflip/hivemind/bee-2_de2izh"
           alt=""
           class="bee bee-2"
         />
@@ -284,7 +284,7 @@
   .bee-3 {
     top: -1.6rem;
     left: 3.2rem;
-    width: 1.8rem;
+    width: 1.4rem;
     height: auto;
     animation: hover 3.5s ease-in-out infinite;
   }
