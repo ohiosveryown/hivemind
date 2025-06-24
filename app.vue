@@ -208,6 +208,9 @@
               >
                 {{ entry.title }}
               </a>
+              <span class="date-added">
+                {{ formatDate(entry.created) }}
+              </span>
             </td>
             <td class="summary">{{ entry.summary }}</td>
             <!-- <td class="created">
@@ -410,6 +413,14 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+  }
+
+  .date-added {
+    display: block;
+    margin: 0.2rem 0 0 2.5rem;
+    font-size: 1.4rem;
+    font-weight: 400;
+    opacity: 0.72;
   }
 
   .favicon {
