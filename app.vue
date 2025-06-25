@@ -419,8 +419,8 @@
     display: block;
     margin: 0.2rem 0 0 2.5rem;
     font-size: 1.4rem;
-    font-weight: 400;
-    opacity: 0.72;
+    font-weight: 500;
+    opacity: 0.48;
   }
 
   .favicon {
@@ -557,7 +557,13 @@
   }
 
   const formatDate = (dateStr) => {
-    return new Date(dateStr).toLocaleDateString()
+    const date = new Date(dateStr)
+    const options = {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+    }
+    return date.toLocaleDateString('en-US', options)
   }
 
   const getDefaultFavicon = (url) => {
