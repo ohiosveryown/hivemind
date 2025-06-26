@@ -417,7 +417,7 @@
 
   .date-added {
     display: block;
-    margin: 0.2rem 0 0 2.5rem;
+    margin: 0.32rem 0 0 2.5rem;
     font-size: 1.4rem;
     font-weight: 500;
     opacity: 0.48;
