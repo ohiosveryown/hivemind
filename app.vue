@@ -129,6 +129,7 @@
       <table>
         <thead>
           <tr>
+            <th class="table-header meta">S</th>
             <th class="table-header">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -158,19 +159,6 @@
               </svg>
               Summary
             </th>
-            <!-- <th class="table-header">
-              <svg
-                width="16"
-                height="16"
-                fill="none"
-              >
-                <path
-                  fill="#55534E"
-                  d="M5.5 4h5V2H12v2h2v10H2V4h2V2h1.5v2Zm-2 8.5h9V7h-9v5.5Z"
-                />
-              </svg>
-              Date Added
-            </th> -->
             <th class="table-header">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -191,7 +179,90 @@
           <tr
             v-for="entry in data.entries"
             :key="entry.id"
+            :class="{ starred: onStars[entry.id] }"
           >
+            <td class="sticker-container">
+              <svg
+                class="sticker star"
+                :class="{ on: onStars[entry.id] }"
+                @click="onStars[entry.id] = !onStars[entry.id]"
+                width="26"
+                height="25"
+                viewBox="0 0 26 25"
+                fill="none"
+              >
+                <g filter="url(#filter0_d_96_470)">
+                  <path
+                    d="M14.2068 4.68989C14.5222 4.018 15.4778 4.018 15.7932 4.68989L18.0902 9.58359L23.3143 10.3818C24.0193 10.4895 24.3072 11.3494 23.8092 11.8598L20 15.7639L20.8898 21.2191C21.0076 21.941 20.2413 22.4809 19.6012 22.127L15 19.5836L10.3988 22.127C9.75871 22.4809 8.9924 21.941 9.11015 21.2191L10 15.7639L6.19085 11.8598C5.6928 11.3494 5.98067 10.4895 6.68567 10.3818L11.9098 9.58359L14.2068 4.68989Z"
+                    fill="#B8B8B8"
+                  />
+                  <path
+                    d="M13.3691 4.13477C14.1036 2.82805 16.0439 2.87119 16.6982 4.26465L18.7676 8.6748L23.4658 9.39355C24.975 9.62452 25.5917 11.4657 24.5254 12.5586L21.0684 16.0996L21.877 21.0586C22.1287 22.6041 20.4878 23.7596 19.1172 23.002L15 20.7256L10.8828 23.002C9.51225 23.7596 7.87131 22.6041 8.12305 21.0586L8.93066 16.0996L5.47461 12.5586C4.40831 11.4657 5.02496 9.62452 6.53418 9.39355L11.2314 8.6748L13.3018 4.26465L13.3691 4.13477Z"
+                    stroke="white"
+                    stroke-width="2"
+                  />
+                </g>
+                <defs>
+                  <filter
+                    id="filter0_d_96_470"
+                    x="0.938477"
+                    y="0.186035"
+                    width="28.123"
+                    height="28.0571"
+                    filterUnits="userSpaceOnUse"
+                    color-interpolation-filters="sRGB"
+                  >
+                    <feFlood
+                      flood-opacity="0"
+                      result="BackgroundImageFix"
+                    />
+                    <feColorMatrix
+                      in="SourceAlpha"
+                      type="matrix"
+                      values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+                      result="hardAlpha"
+                    />
+                    <feOffset dy="1" />
+                    <feGaussianBlur stdDeviation="1.5" />
+                    <feComposite
+                      in2="hardAlpha"
+                      operator="out"
+                    />
+                    <feColorMatrix
+                      type="matrix"
+                      values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.24 0"
+                    />
+                    <feBlend
+                      mode="normal"
+                      in2="BackgroundImageFix"
+                      result="effect1_dropShadow_96_470"
+                    />
+                    <feBlend
+                      mode="normal"
+                      in="SourceGraphic"
+                      in2="effect1_dropShadow_96_470"
+                      result="shape"
+                    />
+                  </filter>
+                </defs>
+              </svg>
+
+              <!-- <svg
+                class="sparkle"
+                width="51"
+                height="55"
+                fill="none"
+              >
+                <path
+                  stroke="#000"
+                  stroke-linecap="round"
+                  stroke-opacity=".22"
+                  stroke-width="2"
+                  d="m42.613 22.842 4.83-1.294M3.418 33.344l4.655-1.248M38.009 40.025l3.535 3.535M9.316 11.332l3.408 3.408M20.826 44.629l-1.294 4.829M31.328 5.434l-1.247 4.655"
+                />
+              </svg> -->
+            </td>
+
             <td class="title">
               <img
                 :src="entry.faviconUrl || getDefaultFavicon(entry.url)"
@@ -213,9 +284,6 @@
               </span>
             </td>
             <td class="summary">{{ entry.summary }}</td>
-            <!-- <td class="created">
-              {{ formatDate(entry.created) }}
-            </td> -->
             <td class="tags">
               <div
                 v-if="entry.tags && entry.tags.length > 0"
@@ -247,6 +315,205 @@
 
 <style lang="scss" scoped>
   @import '@/assets/style/grid.scss';
+
+  th.meta {
+    border: none;
+    padding: 0;
+    opacity: 0;
+    // width: 47px;
+  }
+
+  tr:hover .sticker-container {
+    opacity: 1;
+    transition: opacity 200ms ease;
+  }
+
+  .sticker-container {
+    border: none;
+    position: relative;
+    margin-top: 0.88rem;
+    padding: 0 1.8rem 0 0;
+    opacity: 0;
+    transition: opacity 300ms ease;
+  }
+
+  tr.starred .sticker-container {
+    opacity: 1;
+  }
+
+  .sticker {
+    cursor: pointer;
+    transition: all 300ms ease;
+  }
+
+  .sticker:hover {
+    transform: scale(0.92);
+  }
+
+  .sticker:active {
+    transform: scale(0.86) rotate(-8deg);
+    transition: transform 0.6s cubic-bezier(0.37, 0, 0.24, 4);
+  }
+
+  .sticker.on {
+    transform: scale(1.15) rotate(8deg);
+    transition: transform 2s
+      linear(
+        0,
+        0.03,
+        0.0803,
+        0.219,
+        0.424,
+        0.664,
+        0.914,
+        1.15,
+        1.34,
+        1.49,
+        1.56,
+        1.58,
+        1.53,
+        1.44,
+        1.31,
+        1.17,
+        1.02,
+        0.881,
+        0.772,
+        0.696,
+        0.657,
+        0.657,
+        0.692,
+        0.753,
+        0.833,
+        0.922,
+        1.01,
+        1.09,
+        1.15,
+        1.19,
+        1.21,
+        1.2,
+        1.18,
+        1.14,
+        1.09,
+        1.03,
+        0.982,
+        0.938,
+        0.904,
+        0.883,
+        0.876,
+        0.882,
+        0.899,
+        0.925,
+        0.956,
+        0.988,
+        1.02,
+        1.04,
+        1.06,
+        1.07,
+        1.07,
+        1.07,
+        1.06,
+        1.04,
+        1.02,
+        1,
+        0.984,
+        0.97,
+        0.961,
+        0.956,
+        0.956,
+        0.96,
+        0.968,
+        0.979,
+        0.99,
+        1,
+        1.01,
+        1.02,
+        1.02,
+        1.03,
+        1.03,
+        1.02,
+        1.02,
+        1.01,
+        1,
+        0.998,
+        0.992,
+        0.988,
+        0.985,
+        0.984,
+        0.985,
+        0.987,
+        0.99,
+        0.994,
+        0.998,
+        1,
+        1.01,
+        1.01,
+        1.01,
+        1.01,
+        1.01,
+        1.01,
+        1,
+        1,
+        1,
+        0.998,
+        0.997,
+        0.995,
+        0.995,
+        0.995,
+        0.995,
+        0.996,
+        0.997,
+        0.999,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      );
+  }
+
+  .sticker.star.on {
+    fill: #ffb517;
+  }
+
+  .star {
+    position: absolute;
+    z-index: var(--z1);
+    top: 0.86rem;
+  }
+
+  .sparkle {
+    position: absolute;
+    z-index: var(--z0);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.6);
+    opacity: 1;
+    pointer-events: none;
+  }
+
+  .sparkle-active {
+    animation: sparkles 500ms forwards;
+  }
+
+  @keyframes sparkles {
+    0% {
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0.6);
+    }
+    50% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(1.4);
+    }
+  }
 
   .container {
     margin: 0 auto;
@@ -369,7 +636,7 @@
   }
 
   table {
-    width: 100%;
+    width: calc(100% - 42px);
     border-collapse: collapse;
     margin-top: 2rem;
     letter-spacing: -0.25px;
@@ -483,6 +750,7 @@
   const url = ref('')
   const isLoading = ref(false)
   const message = ref({ text: '', type: '' })
+  const onStars = ref({})
 
   // Use useFetch for reactive data fetching with loading states
   const { data, pending, error, refresh } = await useFetch('/api/entries')
