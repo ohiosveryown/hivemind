@@ -30,6 +30,9 @@ export default defineEventHandler(async (event) => {
       const faviconProperty = page.properties.Favicon
       const faviconUrl = faviconProperty?.type === 'url' ? faviconProperty.url || '' : ''
 
+      // Extract starred status
+      const starred = page.properties.Starred?.checkbox || false
+
       return {
         id: page.id,
         title: page.properties.Title?.title?.[0]?.text?.content || 'Untitled',
@@ -37,7 +40,8 @@ export default defineEventHandler(async (event) => {
         summary: page.properties.Summary?.rich_text?.[0]?.text?.content || '',
         created: createdDate,
         tags,
-        faviconUrl
+        faviconUrl,
+        starred
       }
     })
 

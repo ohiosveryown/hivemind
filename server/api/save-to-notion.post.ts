@@ -81,6 +81,9 @@ export default defineEventHandler(async (event) => {
         },
         'Favicon': {
           url: faviconUrl || null
+        },
+        'Starred': {
+          checkbox: false
         }
       }
     })

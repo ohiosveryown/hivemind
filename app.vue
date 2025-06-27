@@ -185,7 +185,7 @@
               <svg
                 class="sticker star"
                 :class="{ on: onStars[entry.id] }"
-                @click="onStars[entry.id] = !onStars[entry.id]"
+                @click="handleStarClick(entry.id)"
                 width="26"
                 height="25"
                 viewBox="0 0 26 25"
@@ -247,8 +247,9 @@
                 </defs>
               </svg>
 
-              <!-- <svg
+              <svg
                 class="sparkle"
+                :class="{ 'sparkle-active': activeSparkle === entry.id }"
                 width="51"
                 height="55"
                 fill="none"
@@ -260,7 +261,7 @@
                   stroke-width="2"
                   d="m42.613 22.842 4.83-1.294M3.418 33.344l4.655-1.248M38.009 40.025l3.535 3.535M9.316 11.332l3.408 3.408M20.826 44.629l-1.294 4.829M31.328 5.434l-1.247 4.655"
                 />
-              </svg> -->
+              </svg>
             </td>
 
             <td class="title">
@@ -490,10 +491,10 @@
   .sparkle {
     position: absolute;
     z-index: var(--z0);
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) scale(0.6);
-    opacity: 1;
+    top: -0.15rem;
+    left: -1.1rem;
+    transform: scale(0.6);
+    opacity: 0;
     pointer-events: none;
   }
 
@@ -504,14 +505,14 @@
   @keyframes sparkles {
     0% {
       opacity: 0;
-      transform: translate(-50%, -50%) scale(0.6);
+      transform: scale(0.6);
     }
     50% {
       opacity: 1;
     }
     100% {
       opacity: 0;
-      transform: translate(-50%, -50%) scale(1.4);
+      transform: scale(1.4);
     }
   }
 
@@ -751,9 +752,21 @@
   const isLoading = ref(false)
   const message = ref({ text: '', type: '' })
   const onStars = ref({})
+  const activeSparkle = ref(null)
 
   // Use useFetch for reactive data fetching with loading states
   const { data, pending, error, refresh } = await useFetch('/api/entries')
+
+  // Initialize onStars with actual starred status from API
+  watchEffect(() => {
+    if (data.value?.entries) {
+      const starredEntries = {}
+      data.value.entries.forEach((entry) => {
+        starredEntries[entry.id] = entry.starred || false
+      })
+      onStars.value = starredEntries
+    }
+  })
 
   const handleSubmit = async () => {
     if (!url.value.trim()) return
@@ -848,6 +861,50 @@
     const url = event.target.dataset.url
     if (url) {
       event.target.src = getDefaultFavicon(url)
+    }
+  }
+
+  const handleStarClick = async (entryId) => {
+    // Check if we're starring (turning on) or unstarring (turning off)
+    const isStarring = !onStars.value[entryId]
+
+    // Optimistically update the UI
+    onStars.value[entryId] = !onStars.value[entryId]
+
+    // Only trigger sparkle animation when starring (turning on)
+    if (isStarring) {
+      activeSparkle.value = entryId
+
+      // Remove the active class after animation completes
+      setTimeout(() => {
+        activeSparkle.value = null
+      }, 500) // Match the animation duration
+    }
+
+    try {
+      // Call API to update starred status
+      await $fetch('/api/update-starred', {
+        method: 'POST',
+        body: {
+          entryId,
+          starred: onStars.value[entryId],
+        },
+      })
+    } catch (error) {
+      // Revert the UI change if API call fails
+      onStars.value[entryId] = !onStars.value[entryId]
+      console.error('Failed to update starred status:', error)
+
+      // Show error message to user
+      message.value = {
+        text: 'Failed to update starred status. Please try again.',
+        type: 'error',
+      }
+
+      // Clear error message after 3 seconds
+      setTimeout(() => {
+        message.value = { text: '', type: '' }
+      }, 3000)
     }
   }
 </script>
