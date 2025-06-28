@@ -119,7 +119,7 @@
       <!-- Loading state -->
       <div v-if="pending">
         <div></div>
-        Loading summaries...
+        <!-- Loading summaries... -->
       </div>
 
       <!-- Error state -->
@@ -181,7 +181,7 @@
             :key="entry.id"
             :class="{ starred: onStars[entry.id] }"
           >
-            <td class="sticker-container">
+            <td class="star-container">
               <svg
                 class="sticker star"
                 :class="{ on: onStars[entry.id] }"
@@ -297,6 +297,18 @@
                 >
                   {{ tag }}
                 </span>
+                <span
+                  v-if="onStars[entry.id]"
+                  class="tag starred-tag"
+                >
+                  Starred
+                </span>
+              </div>
+              <div
+                v-else-if="onStars[entry.id]"
+                class="tag-list"
+              >
+                <span class="tag starred-tag"> Starred </span>
               </div>
               <span
                 v-else
@@ -324,12 +336,12 @@
     // width: 47px;
   }
 
-  tr:hover .sticker-container {
+  tr:hover .star-container {
     opacity: 1;
-    transition: opacity 200ms ease;
+    transition: opacity 200ms ease 200ms;
   }
 
-  .sticker-container {
+  .star-container {
     border: none;
     position: relative;
     margin-top: 0.88rem;
@@ -338,7 +350,7 @@
     transition: opacity 300ms ease;
   }
 
-  tr.starred .sticker-container {
+  tr.starred .star-container {
     opacity: 1;
   }
 
@@ -741,6 +753,13 @@
     border: 1px solid rgba(0, 0, 0, 0.08);
   }
 
+  // .starred-tag {
+  //   background: #fff3cd;
+  //   color: #856404;
+  //   border: 1px solid #ffeaa7;
+  //   font-weight: 600;
+  // }
+
   .no-tags {
     opacity: 0.4;
     font-style: italic;
@@ -890,6 +909,9 @@
           starred: onStars.value[entryId],
         },
       })
+
+      // Refresh the data to ensure tags column updates properly
+      await refresh()
     } catch (error) {
       // Revert the UI change if API call fails
       onStars.value[entryId] = !onStars.value[entryId]
