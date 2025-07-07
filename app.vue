@@ -323,6 +323,13 @@
       <!-- Empty state -->
       <!-- <div v-else>No summaries yet. Be the first to add one!</div> -->
     </section>
+    <footer class="footer-db">
+      <a
+        href="https://www.notion.so/2179d0f43b9880a38693fbfb164f27fa?v=2179d0f43b988017a3c1000c87efce10"
+        target="_blank"
+        >Database</a
+      >
+    </footer>
   </div>
 </template>
 
@@ -534,7 +541,7 @@
     padding-bottom: 10rem;
     @include breakpoint(md) {
       max-width: var(--max-width);
-      padding: 0 4rem 10rem;
+      padding: 0 4rem 4rem;
     }
   }
 
@@ -763,6 +770,20 @@
   .no-tags {
     opacity: 0.4;
     font-style: italic;
+  }
+
+  .footer-db {
+    width: 100%;
+    text-align: center;
+    margin-top: 6.4rem;
+    font-size: 1.2rem;
+    color: #666;
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  .footer-db a:hover {
+    text-decoration: underline;
   }
 </style>
 
